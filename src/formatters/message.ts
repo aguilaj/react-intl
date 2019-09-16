@@ -161,7 +161,7 @@ export function formatMessage(
       );
     }
     return (
-      defaultMessage || (hasValues ? `${id} ${JSON.stringify(values)}` : id)
+      defaultMessage || id
     );
   }
   if (
