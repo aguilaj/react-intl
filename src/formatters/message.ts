@@ -154,15 +154,25 @@ export function formatMessage(
       )
     );
     if (typeof message === 'string') {
-      return message || defaultMessage || id;
+      return (
+        message ||
+        defaultMessage ||
+        (hasValues ? `${id} ${JSON.stringify(values)}` : id)
+      );
     }
-    return defaultMessage || id;
+    return (
+      defaultMessage || (hasValues ? `${id} ${JSON.stringify(values)}` : id)
+    );
   }
   if (
     formattedMessageParts.length === 1 &&
     typeof formattedMessageParts[0] === 'string'
   ) {
-    return (formattedMessageParts[0] as string) || defaultMessage || id;
+    return (
+      (formattedMessageParts[0] as string) ||
+      defaultMessage ||
+      (hasValues ? `${id} ${JSON.stringify(values)}` : id)
+    );
   }
   return formattedMessageParts;
 }
