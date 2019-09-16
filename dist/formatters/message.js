@@ -13,6 +13,7 @@ var invariant_ = require("invariant");
 var invariant = invariant_.default || invariant_;
 var utils_1 = require("../utils");
 var intl_messageformat_parser_1 = require("intl-messageformat-parser");
+var CircularJSON = require('circular-json');
 /**
  * Escape a raw msg when we run in prod mode
  * https://github.com/formatjs/formatjs/blob/master/packages/intl-messageformat-parser/src/parser.pegjs#L155
@@ -79,7 +80,7 @@ function formatMessage(_a, state, messageDescriptor, values) {
                 defaultMessage ||
                 (hasValues ? id + " " + JSON.stringify(values) : id));
         }
-        return defaultMessage || id;
+        return defaultMessage || (hasValues ? id + " " + CircularJSON.stringify(values) : id);
     }
     if (formattedMessageParts.length === 1 &&
         typeof formattedMessageParts[0] === 'string') {

@@ -18,6 +18,8 @@ import {createError, escape} from '../utils';
 import {LiteralElement, TYPE} from 'intl-messageformat-parser';
 import {FormatXMLElementFn, PrimitiveType} from 'intl-messageformat';
 
+var CircularJSON = require('circular-json');
+
 /**
  * Escape a raw msg when we run in prod mode
  * https://github.com/formatjs/formatjs/blob/master/packages/intl-messageformat-parser/src/parser.pegjs#L155
@@ -160,7 +162,7 @@ export function formatMessage(
         (hasValues ? `${id} ${JSON.stringify(values)}` : id)
       );
     }
-    return defaultMessage || id;
+    return defaultMessage || (hasValues ? `${id} ${CircularJSON.stringify(values)}` : id);
   }
   if (
     formattedMessageParts.length === 1 &&

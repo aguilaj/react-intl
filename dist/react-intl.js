@@ -4485,10 +4485,13 @@
      * See the accompanying LICENSE file for terms.
      */
     var invariant$2 = invariant_1 || invariant_;
+
+    var CircularJSON = require('circular-json');
     /**
      * Escape a raw msg when we run in prod mode
      * https://github.com/formatjs/formatjs/blob/master/packages/intl-messageformat-parser/src/parser.pegjs#L155
      */
+
 
     function escapeUnformattedMessage(msg) {
       return msg.replace(/'\{(.*?)\}'/g, "{$1}");
@@ -4561,7 +4564,7 @@
           return message || defaultMessage || (hasValues ? "".concat(id, " ").concat(JSON.stringify(values)) : id);
         }
 
-        return defaultMessage || id;
+        return defaultMessage || (hasValues ? "".concat(id, " ").concat(CircularJSON.stringify(values)) : id);
       }
 
       if (formattedMessageParts.length === 1 && typeof formattedMessageParts[0] === 'string') {
