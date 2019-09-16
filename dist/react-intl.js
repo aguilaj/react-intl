@@ -4561,7 +4561,7 @@
           return message || defaultMessage || (hasValues ? "".concat(id, " ").concat(JSON.stringify(values)) : id);
         }
 
-        return defaultMessage || (hasValues ? "".concat(id, " ").concat(JSON.stringify(values)) : id);
+        return defaultMessage || id;
       }
 
       if (formattedMessageParts.length === 1 && typeof formattedMessageParts[0] === 'string') {

@@ -160,9 +160,7 @@ export function formatMessage(
         (hasValues ? `${id} ${JSON.stringify(values)}` : id)
       );
     }
-    return (
-      defaultMessage || id
-    );
+    return defaultMessage || id;
   }
   if (
     formattedMessageParts.length === 1 &&

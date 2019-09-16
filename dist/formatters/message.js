@@ -79,7 +79,7 @@ function formatMessage(_a, state, messageDescriptor, values) {
                 defaultMessage ||
                 (hasValues ? id + " " + JSON.stringify(values) : id));
         }
-        return (defaultMessage || (hasValues ? id + " " + JSON.stringify(values) : id));
+        return defaultMessage || id;
     }
     if (formattedMessageParts.length === 1 &&
         typeof formattedMessageParts[0] === 'string') {
