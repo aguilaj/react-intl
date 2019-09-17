@@ -18,7 +18,27 @@ import {createError, escape} from '../utils';
 import {LiteralElement, TYPE} from 'intl-messageformat-parser';
 import {FormatXMLElementFn, PrimitiveType} from 'intl-messageformat';
 
-var CircularJSON = require('circular-json');
+
+function isCyclic(obj: any) {
+  var seenObjects: any = [];
+
+  function detect(obj: any) {
+    if (obj && typeof obj === 'object') {
+      if (seenObjects.indexOf(obj) !== -1) {
+        return true;
+      }
+      seenObjects.push(obj);
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key) && detect(obj[key])) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  return detect(obj);
+}
 
 /**
  * Escape a raw msg when we run in prod mode
@@ -162,7 +182,12 @@ export function formatMessage(
         (hasValues ? `${id} ${JSON.stringify(values)}` : id)
       );
     }
-    return defaultMessage || (hasValues ? `${id} ${CircularJSON.stringify(values)}` : id);
+    if (isCyclic(values)) {
+      return defaultMessage || id;
+    }
+    return (
+      defaultMessage || (hasValues ? `${id} ${JSON.stringify(values)}` : id)
+    );
   }
   if (
     formattedMessageParts.length === 1 &&

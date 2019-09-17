@@ -4479,14 +4479,31 @@
       return 'other';
     }
 
-    /*
-     * Copyright 2015, Yahoo Inc.
-     * Copyrights licensed under the New BSD License.
-     * See the accompanying LICENSE file for terms.
-     */
     var invariant$2 = invariant_1 || invariant_;
 
-    var CircularJSON = require('circular-json');
+    function isCyclic(obj) {
+      var seenObjects = [];
+
+      function detect(obj) {
+        if (obj && _typeof(obj) === 'object') {
+          if (seenObjects.indexOf(obj) !== -1) {
+            return true;
+          }
+
+          seenObjects.push(obj);
+
+          for (var key in obj) {
+            if (obj.hasOwnProperty(key) && detect(obj[key])) {
+              return true;
+            }
+          }
+        }
+
+        return false;
+      }
+
+      return detect(obj);
+    }
     /**
      * Escape a raw msg when we run in prod mode
      * https://github.com/formatjs/formatjs/blob/master/packages/intl-messageformat-parser/src/parser.pegjs#L155
@@ -4564,7 +4581,11 @@
           return message || defaultMessage || (hasValues ? "".concat(id, " ").concat(JSON.stringify(values)) : id);
         }
 
-        return defaultMessage || (hasValues ? "".concat(id, " ").concat(CircularJSON.stringify(values)) : id);
+        if (isCyclic(values)) {
+          return defaultMessage || id;
+        }
+
+        return defaultMessage || (hasValues ? "".concat(id, " ").concat(JSON.stringify(values)) : id);
       }
 
       if (formattedMessageParts.length === 1 && typeof formattedMessageParts[0] === 'string') {
